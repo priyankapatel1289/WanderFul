@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">WanderFul</string>
+    <string name="hint_group_name">Enter group name</string>
+    <string name="hint_travel_place">Enter travel location</string>
+    <string name="hint_travel_date">Enter date of travel</string>
+    <string name="add_group_image">Add group image</string>
+    <string name="button_create_group">Create Group</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="hint_group_chat">Enter message</string>
+</resources>

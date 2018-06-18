@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "1087169519373",
+    "firebase_url": "https://wanderful-37e28.firebaseio.com",
+    "project_id": "wanderful-37e28",
+    "storage_bucket": "wanderful-37e28.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1087169519373:android:d3770e6ee7c9863c",
+        "android_client_info": {
+          "package_name": "patel.priyanka.wanderful"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1087169519373-hgh8rhagom54i1lcerfrqq9gfqn2u0vu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "patel.priyanka.wanderful",
+            "certificate_hash": "e1e5c2f14cf387886dba234a1fcba39417ffe65e"
+          }
+        },
+        {
+          "client_id": "1087169519373-q3ovi0l3l2v2efde2jcrr9l3j5ui4itd.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1087169519373-q3ovi0l3l2v2efde2jcrr9l3j5ui4itd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjp_r7FYi-FDyQlGByPNazfqrYooA9cYk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1087169519373-q3ovi0l3l2v2efde2jcrr9l3j5ui4itd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
