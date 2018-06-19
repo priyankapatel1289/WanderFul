@@ -8,9 +8,9 @@ public class GroupMessagesModel {
     private String messageText;
     private long messageTime;
 
-    public GroupMessagesModel(String messageUser, String messageText) {
-        this.messageUser = messageUser;
+    public GroupMessagesModel(String messageText, String messageUser) {
         this.messageText = messageText;
+        this.messageUser = messageUser;
 
         messageTime = new Date().getTime();
     }

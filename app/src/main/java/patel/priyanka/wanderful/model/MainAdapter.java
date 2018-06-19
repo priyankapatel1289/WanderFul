@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     private final Context context;
     private final MainAdapterOnClickHandler clickHandler;
     private List<MainModel> groupList;
+    private DatabaseReference databaseReference;
+    private String groupName;
 
     public interface MainAdapterOnClickHandler {
         void onClick(MainModel mainModel);
@@ -46,7 +50,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         MainModel mainModel = groupList.get(position);
 
         holder.imageGroupIcon.setImageResource(R.drawable.com_facebook_button_icon_blue);
-        holder.textViewGroupName.setText(mainModel.getGroupName());
+        holder.textViewGroupName.setText(groupName);
         holder.textViewTravelPlace.setText(mainModel.getGroupPlace());
         holder.textViewTravelDate.setText(mainModel.getGroupDate());
     }
@@ -63,7 +67,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         notifyDataSetChanged();
     }
 
-    class MainViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MainViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.image_group_icon)
         ImageView imageGroupIcon;
         @BindView(R.id.textview_group_name)

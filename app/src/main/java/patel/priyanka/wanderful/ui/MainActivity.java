@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -31,14 +30,14 @@ import static com.google.android.gms.auth.api.credentials.CredentialPickerConfig
 
 public class MainActivity extends AppCompatActivity implements MainAdapter.MainAdapterOnClickHandler {
 
-    @BindView(R.id.tv_hello)
-    TextView textView;
     @BindView(R.id.recyclerView_main_activity)
     RecyclerView recyclerView;
     @BindView(R.id.fab_create_group)
     FloatingActionButton fab;
-    private MainAdapter mainAdapter;
-    private ArrayList<MainModel> groupList;
+
+    private ArrayList<MainModel> groupList = new ArrayList<>();
+
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,35 +47,13 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.MainA
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mainAdapter = new MainAdapter(this, this, groupList);
+        MainAdapter mainAdapter = new MainAdapter(this, this, groupList);
         recyclerView.setAdapter(mainAdapter);
         mainAdapter.setGroupList(groupList);
 
-        //firebase database
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        //set up key
-        DatabaseReference reference = firebaseDatabase.getReference("message");
-        //write to database
-        reference.setValue("This database is great!");
-
-        //read from database
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //retrieve latest value
-                String message = dataSnapshot.getValue(String.class);
-                textView.setText(message);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                //error handling
-            }
-        });
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         signingIn();
-
-
         clickFab();
     }
 
@@ -97,6 +74,20 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.MainA
 
     private void displayMainActivity() {
 
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("groupName").child("group").
+                addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                MainModel mainModel = dataSnapshot.getValue(MainModel.class);
+                groupList.add(mainModel);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void setGroupList(ArrayList<MainModel> list) {

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -12,8 +14,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.IOException;
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,8 +49,11 @@ public class CreateGroupActivity extends AppCompatActivity {
     @BindView(R.id.button_cancel_group_creation)
     Button button_cancel_group;
 
-    private MainActivity mainActivity;
-    private static int INTERNAL_CONTENT_URI; //TODO: might need to add value to it
+    private Bitmap groupIcon;
+    private int nextGroupId;
+
+
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +61,26 @@ public class CreateGroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_group);
         ButterKnife.bind(this);
 
-        mainActivity = new MainActivity();
+        button_create_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addGroup();
+            }
+        });
 
         setButton_cancel_group();
-        setButton_create_group();
+//        setButton_create_group();
         getImage();
+    }
+
+    private void addGroup() {
+        MainModel mainModel = createGroupObj();
+        addGroupToDB(mainModel);
+
+    }
+
+    private MainModel createGroupObj() {
+        return null;
     }
 
     private void setButton_cancel_group() {
@@ -64,24 +93,84 @@ public class CreateGroupActivity extends AppCompatActivity {
         });
     }
 
-    private void setButton_create_group() {
-        button_create_group.setOnClickListener(new View.OnClickListener() {
+    private void addGroupToDB(final MainModel mainModel) {
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+//        final MainModel mainModel = new MainModel();
+//
+//        mainModel.setGroupIcon(groupIcon.toString());
+//        mainModel.setGroupName(editText_group_name.getText().toString());
+//        mainModel.setGroupPlace(editText_travel_place.getText().toString());
+//        mainModel.setGroupDate(editText_travel_date.getText().toString());
+
+        databaseReference.child("GroupIDs").child("id").setValue(mainModel);
+
+        databaseReference.runTransaction(new Transaction.Handler() {
+            @NonNull
             @Override
-            public void onClick(View v) {
-                ArrayList<MainModel> groupList = new ArrayList<>();
-                MainModel mainModel = new MainModel();
-                mainModel.setGroupName(String.valueOf(editText_group_name.getText()));
-                mainModel.setGroupPlace(String.valueOf(editText_travel_place.getText()));
-                mainModel.setGroupDate(String.valueOf(editText_travel_date.getText()));
-                groupList.add(mainModel);
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                if (mutableData.getValue(int.class) == null) {
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot != null && dataSnapshot.getValue() == null) {
+                                databaseReference.setValue(1);
+                            }
+                        }
 
-                mainActivity.setGroupList(groupList);
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                Intent intent = new Intent(CreateGroupActivity.this, GroupDetailActivity.class);
-                startActivity(intent);
+                        }
+                    });
+                    return Transaction.abort();
+                }
+                nextGroupId = mutableData.getValue(int.class);
+                mutableData.setValue(nextGroupId + 1);
+                return Transaction.success(mutableData);
+
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean state,
+                                   @Nullable DataSnapshot dataSnapshot) {
+                if (state) {
+                    addNewGroup(mainModel, ""+nextGroupId);
+                } else {
+                    Toast.makeText(getApplicationContext(), "There was a problem creating group, " +
+                            "please create group again", Toast.LENGTH_LONG).show();
+                }
             }
         });
+//        button_create_group.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
     }
+
+    private void addNewGroup(MainModel mainModel, String groupId) {
+        mainModel.setGroupId(groupId);
+        databaseReference.child("group").child(groupId)
+                .setValue(mainModel)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Intent intent = new Intent();
+                            intent.setClass(getApplicationContext(), GroupDetailActivity.class);
+                            startActivity(intent);
+                            Toast.makeText(getApplicationContext(), "New group has been created",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Group could not be added",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
 
     private void getImage() {
         button_add_image.setOnClickListener(new View.OnClickListener() {
@@ -104,9 +193,8 @@ public class CreateGroupActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null) {
                     try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-
-                        imageView_group_icon.setImageBitmap(bitmap);
+                        groupIcon = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
+                        imageView_group_icon.setImageBitmap(groupIcon);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
