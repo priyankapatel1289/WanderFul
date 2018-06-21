@@ -2,6 +2,7 @@ package patel.priyanka.wanderful.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -20,8 +22,9 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter<GroupMessagesAdap
     private Context context;
     private List<GroupMessagesModel> groupMessagesList;
 
-    public GroupMessagesAdapter(Context context) {
+    public GroupMessagesAdapter(Context context, ArrayList<GroupMessagesModel> groupMessagesList) {
         this.context = context;
+        this.groupMessagesList = groupMessagesList;
     }
 
     @NonNull
@@ -36,6 +39,13 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter<GroupMessagesAdap
     public void onBindViewHolder(@NonNull GroupMessagesViewHolder holder, int position) {
         GroupMessagesModel groupMessagesModel = groupMessagesList.get(position);
 
+        if (position %2 == 1) {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.recyclerView1));
+        } else {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.recyclerView2));
+        }
+
+        holder.textView_user.setText(groupMessagesModel.getMessageUser());
         holder.textView_message.setText(groupMessagesModel.getMessageText());
         holder.textView_message_time.setText(DateFormat.format("MM-dd-yy (HH:mm)",
                 groupMessagesModel.getMessageTime()));

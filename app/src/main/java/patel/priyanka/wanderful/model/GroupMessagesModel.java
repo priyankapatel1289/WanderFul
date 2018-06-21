@@ -7,6 +7,9 @@ public class GroupMessagesModel {
     private String messageUser;
     private String messageText;
     private long messageTime;
+    private String messageId;
+
+
 
     public GroupMessagesModel(String messageText, String messageUser) {
         this.messageText = messageText;
@@ -40,5 +43,13 @@ public class GroupMessagesModel {
 
     public void setMessageTime(long messageTime) {
         this.messageTime = messageTime;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 }

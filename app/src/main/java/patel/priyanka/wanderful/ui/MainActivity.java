@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,9 +37,9 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.MainA
     @BindView(R.id.fab_create_group)
     FloatingActionButton fab;
 
-    private ArrayList<MainModel> groupList = new ArrayList<>();
-
+    private InterstitialAd interstitialAd;
     private DatabaseReference databaseReference;
+    private String groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +47,17 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.MainA
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        MainAdapter mainAdapter = new MainAdapter(this, this, groupList);
-        recyclerView.setAdapter(mainAdapter);
-        mainAdapter.setGroupList(groupList);
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_Ads_Unit_Id));
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        interstitialAd.loadAd(adRequest);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         signingIn();
         clickFab();
@@ -73,41 +79,53 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.MainA
     }
 
     private void displayMainActivity() {
+        databaseReference.child("group").orderByChild("groupId")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        ArrayList<MainModel> groupList = new ArrayList<>();
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            groupList.add(ds.getValue(MainModel.class));
+                        }
+                        MainAdapter adapter = new
+                                MainAdapter(getApplicationContext(), groupList, MainActivity.this);
+                        adapter.setGroupList(groupList);
+                        recyclerView.setAdapter(adapter);
+                    }
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("groupName").child("group").
-                addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                MainModel mainModel = dataSnapshot.getValue(MainModel.class);
-                groupList.add(mainModel);
-            }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(getApplicationContext(),
+                                "Error trying to get group for",
+                                Toast.LENGTH_LONG).show();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+                    }
+                });
     }
 
-    public void setGroupList(ArrayList<MainModel> list) {
-        this.groupList = list;
-    }
+//    public void setGroupList(ArrayList<MainModel> list) {
+//        this.groupList = list;
+//    }
 
     private void clickFab() {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CreateGroupActivity.class);
+
                 startActivity(intent);
             }
         });
     }
 
     @Override
-    public void onClick(MainModel mainModel) {
-
+    public void onClick(int groupId) {
+        MainModel mainModel = new MainModel();
+        Intent intent = new Intent(MainActivity.this, GroupDetailActivity.class);
+        intent.putExtra("groupId", mainModel.getGroupId());
+        startActivity(intent);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,7 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import butterknife.BindView;
@@ -53,13 +55,15 @@ public class CreateGroupActivity extends AppCompatActivity {
     private int nextGroupId;
 
 
-    private DatabaseReference databaseReference;
+    private DatabaseReference dbRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
         ButterKnife.bind(this);
+
+        dbRef = FirebaseDatabase.getInstance().getReference();
 
         button_create_group.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +73,6 @@ public class CreateGroupActivity extends AppCompatActivity {
         });
 
         setButton_cancel_group();
-//        setButton_create_group();
         getImage();
     }
 
@@ -80,7 +83,17 @@ public class CreateGroupActivity extends AppCompatActivity {
     }
 
     private MainModel createGroupObj() {
-        return null;
+        final MainModel mainModel = new MainModel();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        groupIcon.compress(Bitmap.CompressFormat.JPEG,0, stream);
+        byte[] bytes = stream.toByteArray();
+        String groupIconString = Base64.encodeToString(bytes, Base64.DEFAULT);
+
+        mainModel.setGroupIcon(groupIconString);
+        mainModel.setGroupName(editText_group_name.getText().toString());
+        mainModel.setGroupPlace(editText_travel_place.getText().toString());
+        mainModel.setGroupDate(editText_travel_date.getText().toString());
+        return mainModel;
     }
 
     private void setButton_cancel_group() {
@@ -94,16 +107,8 @@ public class CreateGroupActivity extends AppCompatActivity {
     }
 
     private void addGroupToDB(final MainModel mainModel) {
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-
-//        final MainModel mainModel = new MainModel();
-//
-//        mainModel.setGroupIcon(groupIcon.toString());
-//        mainModel.setGroupName(editText_group_name.getText().toString());
-//        mainModel.setGroupPlace(editText_travel_place.getText().toString());
-//        mainModel.setGroupDate(editText_travel_date.getText().toString());
-
-        databaseReference.child("GroupIDs").child("id").setValue(mainModel);
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                .getReference("GroupIDs").child("id");
 
         databaseReference.runTransaction(new Transaction.Handler() {
             @NonNull
@@ -128,7 +133,6 @@ public class CreateGroupActivity extends AppCompatActivity {
                 nextGroupId = mutableData.getValue(int.class);
                 mutableData.setValue(nextGroupId + 1);
                 return Transaction.success(mutableData);
-
             }
 
             @Override
@@ -142,22 +146,17 @@ public class CreateGroupActivity extends AppCompatActivity {
                 }
             }
         });
-//        button_create_group.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
     }
 
     private void addNewGroup(MainModel mainModel, String groupId) {
         mainModel.setGroupId(groupId);
-        databaseReference.child("group").child(groupId)
+        dbRef.child("group").child(groupId)
                 .setValue(mainModel)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
+                            restUi();
                             Intent intent = new Intent();
                             intent.setClass(getApplicationContext(), GroupDetailActivity.class);
                             startActivity(intent);
@@ -171,6 +170,13 @@ public class CreateGroupActivity extends AppCompatActivity {
                 });
     }
 
+    private void restUi() {
+        editText_group_name.setText("");
+        editText_travel_place.setText("");
+        editText_travel_date.setText("");
+
+    }
+
 
     private void getImage() {
         button_add_image.setOnClickListener(new View.OnClickListener() {
@@ -180,7 +186,6 @@ public class CreateGroupActivity extends AppCompatActivity {
                         MediaStore.Images.Media.INTERNAL_CONTENT_URI);
                 final int ACTIVITY_SELECT_IMAGE = 10;
                 startActivityForResult(intent, ACTIVITY_SELECT_IMAGE);
-
             }
         });
     }

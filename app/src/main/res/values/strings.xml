@@ -7,4 +7,5 @@
     <string name="button_create_group">Create Group</string>
     <string name="button_cancel">Cancel</string>
     <string name="hint_group_chat">Enter message</string>
+    <string name="interstitial_Ads_Unit_Id">ca-app-pub-3940256099942544/1033173712</string>
 </resources>

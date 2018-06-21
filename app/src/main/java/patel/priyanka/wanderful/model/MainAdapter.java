@@ -1,15 +1,16 @@
 package patel.priyanka.wanderful.model;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,19 +24,18 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     private final Context context;
     private final MainAdapterOnClickHandler clickHandler;
     private List<MainModel> groupList;
-    private DatabaseReference databaseReference;
-    private String groupName;
 
     public interface MainAdapterOnClickHandler {
-        void onClick(MainModel mainModel);
+        void onClick(int groupId);
     }
 
 
-    public MainAdapter(Context context, MainAdapterOnClickHandler clickHandler, ArrayList<MainModel> list) {
+    public MainAdapter(Context context, ArrayList<MainModel> list, MainAdapterOnClickHandler clickHandler) {
         this.context = context;
-        this.clickHandler = clickHandler;
         this.groupList = list;
+        this.clickHandler = clickHandler;
     }
+
 
     @NonNull
     @Override
@@ -48,9 +48,25 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     @Override
     public void onBindViewHolder(@NonNull MainViewHolder holder, int position) {
         MainModel mainModel = groupList.get(position);
+        try {
+            byte[] encodeByte = Base64.decode(mainModel.getGroupIcon(), Base64.DEFAULT);
+            Bitmap groupIcon = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            holder.imageGroupIcon.setImageBitmap(groupIcon);
 
-        holder.imageGroupIcon.setImageResource(R.drawable.com_facebook_button_icon_blue);
-        holder.textViewGroupName.setText(groupName);
+
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
+//        Glide.with(context)
+//                .applyDefaultRequestOptions(requestOptions)
+//                .load(mainModel.getGroupIcon())
+//                .into(holder.imageGroupIcon);
+//        Glide.get(context).clearMemory();
+
+
+        holder.textViewGroupName.setText(mainModel.getGroupName());
         holder.textViewTravelPlace.setText(mainModel.getGroupPlace());
         holder.textViewTravelDate.setText(mainModel.getGroupDate());
     }
@@ -80,15 +96,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         public MainViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            MainModel mainModel = groupList.get(getAdapterPosition());
-            //handle click listener
-            if (clickHandler != null) {
-                clickHandler.onClick(mainModel);
-            }
+            int adapterPosition = getAdapterPosition();
+            clickHandler.onClick(adapterPosition);
+
         }
     }
 }

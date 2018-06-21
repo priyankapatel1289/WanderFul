@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#72b3bf</color>
+    <color name="colorPrimaryDark">#19607a</color>
+    <color name="colorAccent">#f98484</color>
+
+    //color for alternate group messages
+    <color name="recyclerView1">#7fffffff</color>
+    <color name="recyclerView2">#3d454a5e</color>
 </resources>
