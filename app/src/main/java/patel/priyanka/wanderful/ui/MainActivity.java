@@ -12,7 +12,8 @@ import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,8 +37,9 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.MainA
     RecyclerView recyclerView;
     @BindView(R.id.fab_create_group)
     FloatingActionButton fab;
+    @BindView(R.id.adView)
+    AdView adView;
 
-    private InterstitialAd interstitialAd;
     private DatabaseReference databaseReference;
     private String groupId;
 
@@ -47,12 +49,10 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.MainA
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getString(R.string.interstitial_Ads_Unit_Id));
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-        interstitialAd.loadAd(adRequest);
+        //Initialize the Mobile Ads SDK
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 

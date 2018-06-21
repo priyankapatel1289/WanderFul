@@ -18,10 +18,6 @@
         tools:replace="android:supportsRtl"
         android:theme="@style/AppTheme">
 
-<!--        required meta-data tag for Google Play Services-->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,11 +33,6 @@
 
         </activity>
 
-        <!--Include the AdActivity configChanges and theme-->
-        <activity
-            android:name="com.google.android.gms.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:theme="@android:style/Theme.Translucent" />
     </application>
 
 </manifest>
