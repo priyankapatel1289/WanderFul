@@ -10,4 +10,17 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="create_widget">Create Widget</string>
+    <string name="sign_out">Sign out</string>
+    <string name="signed_out">You have been signed out.</string>
+    <string name="signed_in">Successfully signed in. Welcome back!</string>
+    <string name="error_signing_in">We could not sign you in. Please try again later.</string>
+    <string name="error_loading_group">Error loading group</string>
+    <string name="enter_message">Enter message</string>
+    <string name="try_again">Please try again</string>
+    <string name="error_adding_message">Message could not be added</string>
+    <string name="enter_group_name">Please enter group name</string>
+    <string name="error_creating_group">There was a problem creating group, please try again.</string>
+    <string name="new_group_created">New group has been created</string>
+    <string name="error_adding_group">Group could not be added</string>
+    <string name="cancelled">Cancelled</string>
 </resources>

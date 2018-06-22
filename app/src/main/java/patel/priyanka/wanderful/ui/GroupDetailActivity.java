@@ -157,7 +157,7 @@ public class GroupDetailActivity extends AppCompatActivity {
             }
             return groupMessagesModel;
         } else {
-            Toast.makeText(getApplicationContext(), "Enter message", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.enter_message, Toast.LENGTH_LONG).show();
             return null;
         }
     }
@@ -197,7 +197,7 @@ public class GroupDetailActivity extends AppCompatActivity {
                 if (state) {
                     addNewMessages(groupMessagesModel, ""+nextMessageId);
                 } else {
-                    Toast.makeText(getApplicationContext(), "Please try again", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -214,7 +214,7 @@ public class GroupDetailActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 restUi();
                             } else {
-                                Toast.makeText(getApplicationContext(), "Message could not be added",
+                                Toast.makeText(getApplicationContext(), R.string.error_adding_message,
                                         Toast.LENGTH_LONG).show();
                             }
                         }

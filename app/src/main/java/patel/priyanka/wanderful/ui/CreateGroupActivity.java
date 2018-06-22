@@ -102,7 +102,7 @@ public class CreateGroupActivity extends AppCompatActivity {
             mainModel.setGroupDate(editText_travel_date.getText().toString());
             return mainModel;
         } else {
-            Toast.makeText(getApplicationContext(), "Please enter group name", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.enter_group_name, Toast.LENGTH_LONG).show();
             return null;
         }
 
@@ -153,8 +153,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                 if (state) {
                     addNewGroup(mainModel, ""+nextGroupId);
                 } else {
-                    Toast.makeText(getApplicationContext(), "There was a problem creating group, " +
-                            "please try again.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.error_creating_group, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -173,10 +172,10 @@ public class CreateGroupActivity extends AppCompatActivity {
                                 Intent intent = new Intent();
                                 intent.setClass(getApplicationContext(), GroupDetailActivity.class);
                                 startActivity(intent);
-                                Toast.makeText(getApplicationContext(), "New group has been created",
+                                Toast.makeText(getApplicationContext(), R.string.new_group_created,
                                         Toast.LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(getApplicationContext(), "Group could not be added",
+                                Toast.makeText(getApplicationContext(), R.string.error_adding_group,
                                         Toast.LENGTH_LONG).show();
                             }
                         }
@@ -219,7 +218,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                     }
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(this.getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
+                Toast.makeText(this.getApplicationContext(), R.string.cancelled, Toast.LENGTH_LONG).show();
             }
         }
     }
