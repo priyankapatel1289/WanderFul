@@ -15,7 +15,7 @@
         android:id="@+id/image_group_icon"
         android:layout_width="63dp"
         android:layout_height="56dp"
-        android:src="@drawable/com_facebook_button_icon_blue" />
+        android:src="@drawable/group_icon_placeholder" />
 
     </LinearLayout>
 

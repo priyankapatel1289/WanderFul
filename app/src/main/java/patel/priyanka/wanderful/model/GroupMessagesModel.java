@@ -1,12 +1,10 @@
 package patel.priyanka.wanderful.model;
 
-import java.util.Date;
-
 public class GroupMessagesModel {
 
     private String messageUser;
     private String messageText;
-    private long messageTime;
+    private String messageTime;
     private String messageId;
 
 
@@ -14,8 +12,6 @@ public class GroupMessagesModel {
     public GroupMessagesModel(String messageText, String messageUser) {
         this.messageText = messageText;
         this.messageUser = messageUser;
-
-        messageTime = new Date().getTime();
     }
 
     public GroupMessagesModel() {
@@ -37,11 +33,11 @@ public class GroupMessagesModel {
         this.messageText = messageText;
     }
 
-    public long getMessageTime() {
+    public String getMessageTime() {
         return messageTime;
     }
 
-    public void setMessageTime(long messageTime) {
+    public void setMessageTime(String messageTime) {
         this.messageTime = messageTime;
     }
 

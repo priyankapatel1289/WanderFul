@@ -79,21 +79,33 @@ public class CreateGroupActivity extends AppCompatActivity {
     private void addGroup() {
         MainModel mainModel = createGroupObj();
         addGroupToDB(mainModel);
-
     }
 
     private MainModel createGroupObj() {
         final MainModel mainModel = new MainModel();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        groupIcon.compress(Bitmap.CompressFormat.JPEG,0, stream);
-        byte[] bytes = stream.toByteArray();
-        String groupIconString = Base64.encodeToString(bytes, Base64.DEFAULT);
 
-        mainModel.setGroupIcon(groupIconString);
-        mainModel.setGroupName(editText_group_name.getText().toString());
-        mainModel.setGroupPlace(editText_travel_place.getText().toString());
-        mainModel.setGroupDate(editText_travel_date.getText().toString());
-        return mainModel;
+        String groupName = editText_group_name.getText().toString();
+
+        //Check if ar least the group name has been entered otherwise show Toast without adding to database.
+        if (!groupName.equals("")){
+            //compress bitmap only if the group image is added.
+            if (groupIcon != null) {
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                groupIcon.compress(Bitmap.CompressFormat.JPEG,0, stream);
+                byte[] bytes = stream.toByteArray();
+                String groupIconString = Base64.encodeToString(bytes, Base64.DEFAULT);
+                mainModel.setGroupIcon(groupIconString);
+            }
+
+            mainModel.setGroupName(editText_group_name.getText().toString());
+            mainModel.setGroupPlace(editText_travel_place.getText().toString());
+            mainModel.setGroupDate(editText_travel_date.getText().toString());
+            return mainModel;
+        } else {
+            Toast.makeText(getApplicationContext(), "Please enter group name", Toast.LENGTH_LONG).show();
+            return null;
+        }
+
     }
 
     private void setButton_cancel_group() {
@@ -142,32 +154,34 @@ public class CreateGroupActivity extends AppCompatActivity {
                     addNewGroup(mainModel, ""+nextGroupId);
                 } else {
                     Toast.makeText(getApplicationContext(), "There was a problem creating group, " +
-                            "please create group again", Toast.LENGTH_LONG).show();
+                            "please try again.", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
 
     private void addNewGroup(MainModel mainModel, String groupId) {
-        mainModel.setGroupId(groupId);
-        dbRef.child("group").child(groupId)
-                .setValue(mainModel)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            restUi();
-                            Intent intent = new Intent();
-                            intent.setClass(getApplicationContext(), GroupDetailActivity.class);
-                            startActivity(intent);
-                            Toast.makeText(getApplicationContext(), "New group has been created",
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Group could not be added",
-                                    Toast.LENGTH_LONG).show();
+        if (mainModel != null) {
+            mainModel.setGroupId(groupId);
+            dbRef.child("group").child(groupId)
+                    .setValue(mainModel)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                restUi();
+                                Intent intent = new Intent();
+                                intent.setClass(getApplicationContext(), GroupDetailActivity.class);
+                                startActivity(intent);
+                                Toast.makeText(getApplicationContext(), "New group has been created",
+                                        Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Group could not be added",
+                                        Toast.LENGTH_LONG).show();
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
     private void restUi() {

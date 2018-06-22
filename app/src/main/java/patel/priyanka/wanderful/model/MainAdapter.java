@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -48,23 +49,20 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     @Override
     public void onBindViewHolder(@NonNull MainViewHolder holder, int position) {
         MainModel mainModel = groupList.get(position);
+
+        if (position %2 == 1) {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.recyclerView1));
+        } else {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.recyclerView2));
+        }
+
         try {
             byte[] encodeByte = Base64.decode(mainModel.getGroupIcon(), Base64.DEFAULT);
             Bitmap groupIcon = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
             holder.imageGroupIcon.setImageBitmap(groupIcon);
-
-
-
         } catch (Exception e) {
             e.getMessage();
         }
-
-//        Glide.with(context)
-//                .applyDefaultRequestOptions(requestOptions)
-//                .load(mainModel.getGroupIcon())
-//                .into(holder.imageGroupIcon);
-//        Glide.get(context).clearMemory();
-
 
         holder.textViewGroupName.setText(mainModel.getGroupName());
         holder.textViewTravelPlace.setText(mainModel.getGroupPlace());

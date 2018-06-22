@@ -7,4 +7,7 @@
     <string name="button_create_group">Create Group</string>
     <string name="button_cancel">Cancel</string>
     <string name="hint_group_chat">Enter message</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="create_widget">Create Widget</string>
 </resources>

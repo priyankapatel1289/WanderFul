@@ -10,7 +10,8 @@
         android:id="@+id/recyclerView_main_activity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/adView">
+        android:layout_above="@id/adView"
+        style="@style/ScrollBar">
 
     </android.support.v7.widget.RecyclerView>
 
@@ -26,6 +27,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:tint="@android:color/white"
         android:src="@drawable/add" />
 
     <!--adUnitId set for test ads. Change when publishing-->

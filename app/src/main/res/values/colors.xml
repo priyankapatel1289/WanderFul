@@ -6,5 +6,9 @@
 
     //color for alternate group messages
     <color name="recyclerView1">#7fffffff</color>
-    <color name="recyclerView2">#3d454a5e</color>
+    <color name="recyclerView2">#1e8f9199</color>
+    
+    //color for vertical track scrollbar
+    <color name="scrollbarEndColor">#9BA3C5</color>
+    <color name="scrollbarStartColor">#8388A4</color>
 </resources>

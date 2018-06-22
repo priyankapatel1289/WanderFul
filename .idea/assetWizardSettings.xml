@@ -154,7 +154,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio2/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_add_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio2/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_arrow_upward_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -165,7 +165,7 @@
                         <option name="values">
                           <map>
                             <entry key="opacityPercent" value="87" />
-                            <entry key="outputName" value="add" />
+                            <entry key="outputName" value="send_arrow" />
                             <entry key="sourceFile" value="C:\Users\Priyanka" />
                           </map>
                         </option>

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,8 +46,7 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter<GroupMessagesAdap
 
         holder.textView_user.setText(groupMessagesModel.getMessageUser());
         holder.textView_message.setText(groupMessagesModel.getMessageText());
-        holder.textView_message_time.setText(DateFormat.format("MM-dd-yy (HH:mm)",
-                groupMessagesModel.getMessageTime()));
+        holder.textView_message_time.setText(String.valueOf(groupMessagesModel.getMessageTime()));
     }
 
     @Override

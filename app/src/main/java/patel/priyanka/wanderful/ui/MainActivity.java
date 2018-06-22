@@ -1,7 +1,10 @@
 package patel.priyanka.wanderful.ui;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +31,7 @@ import butterknife.ButterKnife;
 import patel.priyanka.wanderful.R;
 import patel.priyanka.wanderful.model.MainAdapter;
 import patel.priyanka.wanderful.model.MainModel;
+import patel.priyanka.wanderful.widget.GroupsAppWidget;
 
 import static com.google.android.gms.auth.api.credentials.CredentialPickerConfig.Prompt.SIGN_IN;
 
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.MainA
     @BindView(R.id.adView)
     AdView adView;
 
+    private static final String SCROLL_POSITION = "SCROLL_POSITION";
+    Parcelable listState;
     private DatabaseReference databaseReference;
     private String groupId;
 
@@ -58,9 +64,23 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.MainA
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.getLayoutManager().onRestoreInstanceState(listState);
 
         signingIn();
         clickFab();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        listState = recyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(SCROLL_POSITION, listState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        listState = savedInstanceState.getParcelable(SCROLL_POSITION);
     }
 
     public void signingIn() {
@@ -120,10 +140,22 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.MainA
 
     @Override
     public void onClick(int groupId) {
+        sendBroadcast();
         MainModel mainModel = new MainModel();
         Intent intent = new Intent(MainActivity.this, GroupDetailActivity.class);
         intent.putExtra("groupId", mainModel.getGroupId());
         startActivity(intent);
+    }
+
+    private void sendBroadcast() {
+        Intent intent = new Intent(this, GroupsAppWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
+        int[] ids = widgetManager.getAppWidgetIds(new ComponentName(this, GroupsAppWidget.class));
+        widgetManager.notifyAppWidgetViewDataChanged(ids, R.id.list_view_widget);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, ids);
+        sendBroadcast(intent);
     }
 
 
