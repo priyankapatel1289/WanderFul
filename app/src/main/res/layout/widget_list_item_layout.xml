@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<RelativeLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/linear_layout_detail_item"
+        android:id="@+id/widget_linear_layout_detail_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/text_view_user"
+            android:id="@+id/widget_text_view_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/text_view_message_time"
+            android:id="@+id/widget_text_view_message_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="end"
@@ -25,56 +25,10 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/text_view_message"
+        android:id="@+id/widget_text_view_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/linear_layout_detail_item"
+        android:layout_below="@id/widget_linear_layout_detail_item"
         android:textSize="16sp"/>
-
-</RelativeLayout>-->
-
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/padding_main_group_icon"
-    android:gravity="center">
-
-    <LinearLayout
-        android:id="@+id/widget_linear_layout_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/widget_image_group_icon"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/com_facebook_button_icon_blue" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_toRightOf="@id/widget_linear_layout_image"
-        android:layout_toEndOf="@id/widget_linear_layout_image">
-
-        <TextView
-            android:id="@+id/widget_textview_group_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/widget_textview_travel_place"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/widget_textview_travel_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
 
 </RelativeLayout>

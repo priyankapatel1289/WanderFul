@@ -11,5 +11,8 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
 
     <!--scrollbar dimen-->
     <dimen name="scrollbar_radius">6dp</dimen>
+    <dimen name="elevation_appbar">4dp</dimen>
+    <dimen name="group_name_title">32sp</dimen>
+    <dimen name="collapsing_toolbar_widget">6dp</dimen>
 
 </resources>

@@ -3,6 +3,7 @@ package patel.priyanka.wanderful.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -47,7 +48,6 @@ public class ListWidgetServices extends RemoteViewsService {
                 groupMessagesList = gson.fromJson(json, new TypeToken<ArrayList<GroupMessagesModel>>() {
                 }.getType());
             }
-
         }
 
         @Override
@@ -66,12 +66,15 @@ public class ListWidgetServices extends RemoteViewsService {
         public RemoteViews getViewAt(int position) {
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_list_item_layout);
-            views.setTextViewText(R.id.widget_textview_group_name, groupMessagesList.get(position).getMessageUser());
-            views.setTextViewText(R.id.widget_textview_travel_place, groupMessagesList.get(position).getMessageText());
+            views.setTextViewText(R.id.widget_text_view_user, groupMessagesList.get(position).getMessageUser());
+            views.setTextViewText(R.id.widget_text_view_message, groupMessagesList.get(position).getMessageText());
+            views.setTextViewText(R.id.widget_text_view_message_time, groupMessagesList.get(position).getMessageTime());
 
-//            Intent fillInIntent = new Intent();
-//            fillInIntent.putExtra(Intent.EXTRA_TEXT, groupMessagesList.get(position));
-//            views.setOnClickFillInIntent(R.id.widget_textview_travel_place, fillInIntent);
+            Intent fillInIntent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putString("message", groupMessagesList.get(position).getMessageText());
+            fillInIntent.putExtras(bundle);
+            views.setOnClickFillInIntent(R.id.widget_text_view_message, fillInIntent);
 
             return views;
         }

@@ -7,6 +7,7 @@
     tools:context=".ui.GroupDetailActivity">
     
     <LinearLayout
+        android:id="@+id/linear_layout_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/linear_layout_text_input">
@@ -51,7 +52,8 @@
             android:focusable="true"
             android:tint="@android:color/white"
             app:fabSize="mini"
-            android:src="@drawable/send_arrow"/>
+            android:src="@drawable/send_arrow"
+            android:contentDescription="@string/add_more_groups"/>
 
     </LinearLayout>
 

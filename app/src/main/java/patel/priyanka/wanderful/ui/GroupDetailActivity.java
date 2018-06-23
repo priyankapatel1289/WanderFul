@@ -11,10 +11,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,7 +58,8 @@ public class GroupDetailActivity extends AppCompatActivity {
     private FirebaseUser user;
     Parcelable listState;
 
-    private String groupId;
+    public String groupId;
+    private int REQUEST_INVITE = 4865;
 
 
     @Override
@@ -64,9 +69,13 @@ public class GroupDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
-        if (intent.hasExtra("groupId")) {
-            groupId = intent.getStringExtra("groupId");
+        if (intent != null) {
+            if (intent.hasExtra("data")) {
+                Bundle bundle = intent.getBundleExtra("data");
+                groupId = bundle.getString("groupId");
+            }
         }
+
 
         dbRef = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -104,7 +113,7 @@ public class GroupDetailActivity extends AppCompatActivity {
     }
 
     private void displayGroupChat() {
-                dbRef.child("messages").child("1").
+                dbRef.child("messages").child(groupId).
                 addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -123,7 +132,6 @@ public class GroupDetailActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString(WIDGET_MESSAGES_SHAREDPREF, jsonMessages);
                         editor.apply();
-
                     }
 
                     @Override
@@ -137,7 +145,6 @@ public class GroupDetailActivity extends AppCompatActivity {
     private void addGroup() {
         GroupMessagesModel groupMessagesModel = createGroupObj();
         addMessagesToDB(groupMessagesModel);
-
     }
 
     private GroupMessagesModel createGroupObj() {
@@ -148,7 +155,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         //Check if a new message has been entered otherwise show Toast without adding to database.
         if (!message.equals("")) {
             groupMessagesModel.setMessageText(message);
-            String message_time = new SimpleDateFormat("MM-dd-yy HH:mm a").format((Calendar.getInstance().getTime()));
+            String message_time = new SimpleDateFormat("MM/dd/yy HH:mm a").format((Calendar.getInstance().getTime()));
             groupMessagesModel.setMessageTime(message_time);
             if (user.getDisplayName() != null) {
                 groupMessagesModel.setMessageUser(user.getDisplayName());
@@ -196,8 +203,8 @@ public class GroupDetailActivity extends AppCompatActivity {
                                    @Nullable DataSnapshot dataSnapshot) {
                 if (state) {
                     addNewMessages(groupMessagesModel, ""+nextMessageId);
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_LONG).show();
+//                } else {
+//                    Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -206,7 +213,7 @@ public class GroupDetailActivity extends AppCompatActivity {
     private void addNewMessages(GroupMessagesModel groupMessagesModel, String messageId) {
         if (groupMessagesModel != null) {
             groupMessagesModel.setMessageId(messageId);
-            dbRef.child("messages").child("1").child(messageId)
+            dbRef.child("messages").child(groupId).child(messageId)
                     .setValue(groupMessagesModel)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -225,6 +232,47 @@ public class GroupDetailActivity extends AppCompatActivity {
 
     private void restUi() {
         editText_group_chat.setText("");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.detail_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        } else if (item.getItemId() == R.id.menu_invite_users) {
+            onInviteClicked();
+        }
+        return true;
+    }
+
+    private void onInviteClicked() {
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("TAG", "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for (String id : ids) {
+                    Log.d("TAG", "onActivityResult: sent invitation " + id);
+                }
+            } else {
+                Toast.makeText(this, R.string.invitation_failed, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
 }

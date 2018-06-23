@@ -3,6 +3,7 @@ package patel.priyanka.wanderful.ui;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +22,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +31,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 
 import java.util.ArrayList;
 
@@ -72,6 +78,29 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.MainA
 
         signingIn();
         clickFab();
+
+
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                        // Get deep link from result (may be null if no link is found)
+                        Uri deepLink = null;
+                        if (pendingDynamicLinkData != null) {
+                            deepLink = pendingDynamicLinkData.getLink();
+                        }
+
+                        displayMainActivity();
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TAG", "getDynamicLink:onFailure", e);
+                    }
+                });
+
     }
 
     @Override
@@ -127,10 +156,6 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.MainA
                 });
     }
 
-//    public void setGroupList(ArrayList<MainModel> list) {
-//        this.groupList = list;
-//    }
-
     private void clickFab() {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,11 +168,12 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.MainA
     }
 
     @Override
-    public void onClick(int groupId) {
+    public void onClick(MainModel mainModel) {
         sendBroadcast();
-        MainModel mainModel = new MainModel();
-        Intent intent = new Intent(MainActivity.this, GroupDetailActivity.class);
-        intent.putExtra("groupId", mainModel.getGroupId());
+        Intent intent = new Intent(this, GroupDetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("groupId", mainModel.getGroupId());
+        intent.putExtra("data", bundle);
         startActivity(intent);
     }
 

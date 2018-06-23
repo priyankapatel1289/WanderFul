@@ -1,12 +1,9 @@
 package patel.priyanka.wanderful.model;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +15,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import patel.priyanka.wanderful.BitmapWorkerTask;
 import patel.priyanka.wanderful.R;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder>{
@@ -27,7 +25,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     private List<MainModel> groupList;
 
     public interface MainAdapterOnClickHandler {
-        void onClick(int groupId);
+        void onClick(MainModel mainModel);
     }
 
 
@@ -50,23 +48,22 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     public void onBindViewHolder(@NonNull MainViewHolder holder, int position) {
         MainModel mainModel = groupList.get(position);
 
+
         if (position %2 == 1) {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.recyclerView1));
         } else {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.recyclerView2));
         }
 
-        try {
-            byte[] encodeByte = Base64.decode(mainModel.getGroupIcon(), Base64.DEFAULT);
-            Bitmap groupIcon = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            holder.imageGroupIcon.setImageBitmap(groupIcon);
-        } catch (Exception e) {
-            e.getMessage();
-        }
-
+        loadBitmap(mainModel.getGroupIcon(), holder.imageGroupIcon);
         holder.textViewGroupName.setText(mainModel.getGroupName());
         holder.textViewTravelPlace.setText(mainModel.getGroupPlace());
         holder.textViewTravelDate.setText(mainModel.getGroupDate());
+    }
+
+    private void loadBitmap(String bitmap, ImageView imageView) {
+        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+        task.execute(bitmap);
     }
 
     @Override
@@ -99,8 +96,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
         @Override
         public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            clickHandler.onClick(adapterPosition);
+            final MainModel mainModel = groupList.get(getAdapterPosition());
+//            int adapterPosition = getAdapterPosition();
+            if (clickHandler != null) {
+                clickHandler.onClick(mainModel);
+
+            }
 
         }
     }

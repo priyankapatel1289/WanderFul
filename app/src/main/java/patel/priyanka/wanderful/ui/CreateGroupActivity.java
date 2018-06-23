@@ -105,7 +105,6 @@ public class CreateGroupActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), R.string.enter_group_name, Toast.LENGTH_LONG).show();
             return null;
         }
-
     }
 
     private void setButton_cancel_group() {
@@ -152,8 +151,8 @@ public class CreateGroupActivity extends AppCompatActivity {
                                    @Nullable DataSnapshot dataSnapshot) {
                 if (state) {
                     addNewGroup(mainModel, ""+nextGroupId);
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.error_creating_group, Toast.LENGTH_LONG).show();
+//                } else {
+//                    Toast.makeText(getApplicationContext(), R.string.error_creating_group, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -170,7 +169,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 restUi();
                                 Intent intent = new Intent();
-                                intent.setClass(getApplicationContext(), GroupDetailActivity.class);
+                                intent.setClass(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
                                 Toast.makeText(getApplicationContext(), R.string.new_group_created,
                                         Toast.LENGTH_LONG).show();

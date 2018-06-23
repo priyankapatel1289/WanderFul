@@ -23,4 +23,11 @@
     <string name="new_group_created">New group has been created</string>
     <string name="error_adding_group">Group could not be added</string>
     <string name="cancelled">Cancelled</string>
+    <string name="invite_users">Invite Users</string>
+    <string name="invitation_title">WanderFul Group Invitation</string>
+    <string name="invitation_message">You have been invited to join a group in WanderFul app.</string>
+    <string name="group_icon">Group Icon</string>
+    <string name="add_more_groups">Add more groups</string>
+    <string name="group_image_icon">Group image icon</string>
+    <string name="invitation_failed">Failed to send message</string>
 </resources>

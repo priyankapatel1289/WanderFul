@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import patel.priyanka.wanderful.R;
 
 public class ConfigurationActivity extends AppCompatActivity {
@@ -22,6 +23,7 @@ public class ConfigurationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration);
         setResult(RESULT_CANCELED);
+        ButterKnife.bind(this);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

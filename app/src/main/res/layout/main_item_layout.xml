@@ -15,7 +15,8 @@
         android:id="@+id/image_group_icon"
         android:layout_width="63dp"
         android:layout_height="56dp"
-        android:src="@drawable/group_icon_placeholder" />
+        android:src="@drawable/group_icon_placeholder"
+        android:contentDescription="@string/group_image_icon"/>
 
     </LinearLayout>
 
