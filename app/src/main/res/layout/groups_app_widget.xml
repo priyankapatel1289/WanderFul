@@ -2,7 +2,9 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:padding="@dimen/widget_padding">
 
     <ListView
         android:id="@+id/list_view_widget"
@@ -12,6 +14,7 @@
     <TextView
         android:id="@+id/text_view_widget_empty"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:gravity="center"/>
 
 </FrameLayout>

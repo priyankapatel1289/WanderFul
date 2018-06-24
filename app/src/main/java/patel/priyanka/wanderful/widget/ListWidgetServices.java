@@ -86,7 +86,7 @@ public class ListWidgetServices extends RemoteViewsService {
 
         @Override
         public int getViewTypeCount() {
-            return 0;
+            return 1;
         }
 
         @Override

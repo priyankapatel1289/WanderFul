@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.MainA
     private static final String SCROLL_POSITION = "SCROLL_POSITION";
     Parcelable listState;
     private DatabaseReference databaseReference;
-    private String groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

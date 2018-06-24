@@ -1,16 +1,12 @@
 apply plugin: 'com.android.application'
 
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 android {
     signingConfigs {
         config {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
+            keyAlias 'wanderfulkey'
+            keyPassword 'android'
+            storeFile file("$rootDir/keystore.jks")
+            storePassword 'android'
         }
     }
     compileSdkVersion 27
@@ -24,9 +20,14 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            useProguard false
+
+        }
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+/*            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'*/
             signingConfig signingConfigs.config
         }
     }
@@ -42,19 +43,21 @@ dependencies {
     //RecyclerView dependency
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     //firebase dependencies
-    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-core:16.0.0'
     implementation 'com.firebaseui:firebase-ui:1.1.1'
     //firebase realtime database
-    implementation 'com.google.firebase:firebase-database:16.0.1'
+    implementation 'com.google.firebase:firebase-database:16.0.0'
     //firebase ui-database
     implementation 'com.firebaseui:firebase-ui-database:4.0.1'
     //firebase-ui-auth
     implementation 'com.google.firebase:firebase-auth:16.0.2'
+    //app crashed without this dependency
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     //Display ads with Firebase
     implementation 'com.google.firebase:firebase-ads:15.0.1'
+
     //Invite and add users to group
-    implementation 'com.google.firebase:firebase-invites:16.0.1'
+    implementation 'com.google.firebase:firebase-invites:16.0.0'
     //Arch
     implementation 'android.arch.core:runtime:1.1.1'
     implementation 'android.arch.core:common:1.1.1'

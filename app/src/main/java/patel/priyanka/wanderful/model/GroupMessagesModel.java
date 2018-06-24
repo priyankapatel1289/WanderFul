@@ -1,11 +1,14 @@
 package patel.priyanka.wanderful.model;
 
+import java.util.ArrayList;
+
 public class GroupMessagesModel {
 
     private String messageUser;
     private String messageText;
     private String messageTime;
     private String messageId;
+    private ArrayList<GroupMessagesModel> groupChatList = null;
 
 
 
@@ -48,4 +51,5 @@ public class GroupMessagesModel {
     public void setMessageId(String messageId) {
         this.messageId = messageId;
     }
+
 }
